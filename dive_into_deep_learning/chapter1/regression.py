@@ -23,20 +23,39 @@ def show_train_data(X):
 X,y = generate_train_data()
 
 train_w = torch.zeros(2,dtype=torch.float32,requires_grad=True)
-train_b = torch.tensor(0,dtype=torch.float32,requires_grad=True)
+train_b = torch.zeros(0,dtype=torch.float32,requires_grad=True)
 
 
-def nn_model(tx,tb):
-    return torch.matmul(tx,train_w)+tb
+def nn_model(tx):
+    return torch.matmul(tx,train_w)+train_b
 
+# loss function
 def loss(y,y_hat):
-    return (y-torch.reshape(y_hat,y.shape))**2/2
+    return (y.reshape(y_hat.shape)-y_hat)**2/2
 
 def data_iter(xs,ys,batch_size):
     for i in range(0,len(xs),batch_size):
         end = min(i+batch_size,len(xs))
         yield (xs[i:end],ys[i:end])
-iterdata = data_iter(X,y,1)
+dataiter = data_iter(X,y,20)
+
+lr = 0.03
+epoch = 5
+for i in range(epoch):
+    for data in dataiter:
+        x_data,y_data = data
+        y_hat = nn_model(x_data)
+        l = loss(y_data,y_hat)
+        l.sum().backward()
+        # 计算梯度
+        with torch.no_grad():
+            train_w -= lr*train_w.grad/20
+            train_b -= lr*train_b.grad/20
+            train_w.grad.zero_()
+            train_b.grad.zero_()
+
+print (true_w - train_w)
+print (true_b - train_b)
 
 
 

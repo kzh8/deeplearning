@@ -65,4 +65,3 @@ for i in range(epoch):
     print("___loss___:",loss_val)
 
 
-

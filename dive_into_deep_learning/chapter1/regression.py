@@ -22,12 +22,12 @@ def show_train_data(X):
 
 X,y = generate_train_data()
 
-train_w = torch.zeros(2,dtype=torch.float32,requires_grad=True)
-train_b = torch.zeros(0,dtype=torch.float32,requires_grad=True)
+train_w = torch.zeros([2,1],dtype=torch.float32,requires_grad=True)
+train_b = torch.zeros([1],dtype=torch.float32,requires_grad=True)
 
 
 def nn_model(tx):
-    return torch.matmul(tx,train_w)+train_b
+    return torch.matmul(tx, train_w) + train_b
 
 # loss function
 def loss(y,y_hat):
@@ -37,12 +37,11 @@ def data_iter(xs,ys,batch_size):
     for i in range(0,len(xs),batch_size):
         end = min(i+batch_size,len(xs))
         yield (xs[i:end],ys[i:end])
-dataiter = data_iter(X,y,20)
 
 lr = 0.03
 epoch = 5
 for i in range(epoch):
-    for data in dataiter:
+    for data in data_iter(X,y,20):
         x_data,y_data = data
         y_hat = nn_model(x_data)
         l = loss(y_data,y_hat)
@@ -54,11 +53,5 @@ for i in range(epoch):
             train_w.grad.zero_()
             train_b.grad.zero_()
 
-print (true_w - train_w)
-print (true_b - train_b)
-
-
-
-
-
-
+print(train_w)
+print(true_b - train_b)

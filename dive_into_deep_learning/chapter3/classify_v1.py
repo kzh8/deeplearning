@@ -2,6 +2,8 @@ import torchvision
 import torchvision.transforms as transforms
 import torch
 from torch.utils import data
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 # 训练数据集
 root_path = "../../data"
@@ -13,8 +15,6 @@ test_set = torchvision.datasets.FashionMNIST(root_path,train=False,download=True
 batch_size = 8
 train_data_loader = data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
 test_data_loader = data.DataLoader(test_set, batch_size=batch_size, shuffle=False)
-
-
 
 def softmax(X):
     x_exp = torch.exp(X)
@@ -40,16 +40,19 @@ def accuracy(y_hat,y):
     cmp = y_hat.type(y.dtype) == y
     return float(cmp.type(y.dtype).sum())
 
-def calculate_accuracy():
+def calculate_accuracy(data_loader):
     true_count = 0
-    for X,y in test_data_loader:
+    for X,y in data_loader:
         y_hat = net(X)
         y_p = y_hat.argmax(axis = 1)
         p = y_p == y
         for each in p:
             if each:
                 true_count+=1
-    print(true_count/(len(test_data_loader)*batch_size))
+
+    accuracy = true_count/(len(test_data_loader)*batch_size)
+    return accuracy
+
 
 ## train
 sgd = torch.optim.SGD(params=(w,b),lr=0.03)
@@ -63,4 +66,6 @@ for i in range(epoch):
         sgd.step()
         sgd.zero_grad()
         res+=1
-    calculate_accuracy()
+    acc = calculate_accuracy(test_data_loader)
+    plt.draw()
+

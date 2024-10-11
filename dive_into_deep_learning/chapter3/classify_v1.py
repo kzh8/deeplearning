@@ -9,8 +9,8 @@ import matplotlib.animation as animation
 root_path = "../../data"
 trans = [transforms.ToTensor()]
 trans = transforms.Compose(trans)
-train_set = torchvision.datasets.FashionMNIST(root_path,train=True,download=True,transform=trans)
-test_set = torchvision.datasets.FashionMNIST(root_path,train=False,download=True,transform=trans)
+train_set = torchvision.datasets.FashionMNIST(root_path,train=True,download=True, transform=trans)
+test_set = torchvision.datasets.FashionMNIST(root_path,train=False,download=True, transform=trans)
 
 batch_size = 8
 train_data_loader = data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
